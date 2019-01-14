@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+        {{ super() }}
+        {{ ckeditor.load_code_theme() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>修改用例</h1>
+    </div>
+
+    <hr>
+    <form method="POST" id="testcase-edit">
+        {{ testcase_form.hidden_tag() }}
+        {{ testcase_form.project_id.label }}
+        <div class='form-group'>
+            {{ testcase_form.project_id(class="form-control", readonly="true") }}
+        </div>
+        {{ testcase_form.name.label }}
+        <div class='form-group'>
+            {{ testcase_form.name(class="form-control") }}
+        </div>
+
+        {{ testcase_form.desc.label }}
+        <div class='form-group'>
+            {{ testcase_form.desc(class="form-control") }}
+        </div>
+    </form>
+    <intput class="btn btn-default" type="button" onclick="add_testcase()">提交</intput>
+
+    <hr>
+
+    {% if steps %}
+        {% include 'testcase/show_step.html' %}
+    {% endif %}
+
+    <button class="btn btn-default" data-toggle="modal" data-target="#addStep">
+        新增步骤
+    </button>
+    {% include 'testcase/add_step.html' %}
+
+
+{% endblock %}

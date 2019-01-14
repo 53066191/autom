@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block page_content %}
+<div class="page-header">
+    {% if current_user.is_authenticated  %}
+        <h1>hello, {{ current_user.username }}</h1>
+    {% else %}
+        <h1>hello, Stranger</h1>
+    {% endif %}
+
+</div>
+
+
+
+{% endblock %}

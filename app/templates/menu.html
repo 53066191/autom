@@ -1,0 +1,25 @@
+<div class=container-fluid" >
+    <div class="row-fluie">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <!-- Inner sidebar -->
+                <!-- Sidebar Menu -->
+                <ul class="nav nav-sidebar">
+                    <!-- Optionally, you can add icons to the links -->
+                    <li><a href="{{ url_for("project.show") }}" ><i class="fa fa-home"></i><span>项  目</span></a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-cube"></i><span>模  块</span></a></li>
+                    <li><a href="#"><i class="fa fa-tree"></i><span>环  境</span></a></li>
+                    <li><a href="{{ url_for("project.interface_show") }}"><i class="fa fa-circle-thin"></i><span>接  口</span></a></li>
+                    <li><a href="{{ url_for("project.testcase_show") }}"><i class="fa fa-files-o"></i><span>测试用例</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="#">Link in level 2</a></li>
+                            <li><a href="#">Link in level 2</a></li>
+                        </ul>
+                    </li>
+                </ul><!-- /.sidebar-menu -->
+
+        </div>
+    </div>
+</div><!-- /.main-sidebar -->

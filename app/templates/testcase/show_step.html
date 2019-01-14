@@ -1,0 +1,29 @@
+<ul class="projects">
+    <div class="page-header">
+        <h2>测试步骤</h2>
+    </div>
+    <table width="100%">
+        <tr>
+            <td>序号</td>
+            <td>步骤描述</td>
+            <td>创建时间</td>
+            <td>操作</td>
+
+        </tr>
+        {% for step in steps %}
+            <div class="profile-thumbnail">
+                <tr>
+                    <td>{{ step.index }} </td>
+                    <td>{{ step.desc }} </td>
+                    <td style="text-align:left;">{{ moment(step.timestamp).fromNow() }}</td>
+                    <td height="40px">
+                        <button type="button" class="btn btn-default"
+                                onclick="location.href='{{ url_for('project.testcase_edit',id=teststep_form.testcase_id.data) }}'">
+                            编辑
+                        </button>
+                    </td>
+                </tr>
+            </div>
+        {% endfor %}
+    </table>
+</ul>

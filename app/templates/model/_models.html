@@ -1,0 +1,21 @@
+<ul class="projects">
+            <table  width="100%">
+                {% for  model in models %}
+                    <div class="profile-thumbnail">
+                        <tr >
+                                <td>{{ loop.index0 + 1}} </td>
+                                <td>{{ model.name}} </td>
+
+                                <td style="text-align:left;">{{ moment(model.timestamp).fromNow() }}</td>
+                                <td height="40px">
+                                    <button type="button" class="btn btn-default"
+                                              onclick="location.href='{{url_for('project.model_edit',id=model.id) }}'">编辑
+                                    </button>
+                                </td>
+
+                        </tr>
+                    </div>
+                {% endfor %}
+            </table>
+
+</ul>

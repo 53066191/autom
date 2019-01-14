@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import "_page.html" as macros %}
+
+
+
+{% block page_content %}
+    <button class="btn btn-default" data-toggle="modal" data-target="#addModal">
+	新增项目
+    </button>
+    <hr>
+        {% include 'project/_add_project.html' %}
+
+    <ul class="projects">
+            <table  width="100%">
+                {% for  project in projects %}
+                    <div class="profile-thumbnail">
+                        <tr >
+                                <td>{{ loop.index0 + 1}} </td>
+                                <td>{{ project.name}} </td>
+
+                                <td style="text-align:left;">{{ moment(project.timestamp).fromNow() }}</td>
+                                <td height="40px">
+                                    <button type="button" class="btn btn-default"
+                                              onclick="location.href='{{url_for('project.edit',id=project.id) }}'">编辑
+                                    </button>
+                                </td>
+
+                        </tr>
+                    </div>
+                {% endfor %}
+            </table>
+
+
+        </ul>
+
+    {#分页    #}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, 'project.show') }}
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+

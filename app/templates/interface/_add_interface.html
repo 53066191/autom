@@ -1,0 +1,116 @@
+<div class="modal fade" id="addInterface" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            {#            <button type="button" class="close" data-dismiss="modal">&times;</button>#}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="interface-add">
+                    {{ form.project_id.label }}
+                    <div class='form-group'>
+                        {{ form.project_id(class="form-control") }}
+                    </div>
+                    {{ form.model_id.label }}
+                    <div class='form-group'>
+                        {{ form.model_id(class="form-control") }}
+                    </div>
+
+                    {{ form.name.label }}
+                    <div class='form-group'>
+                        {{ form.name(class="form-control") }}
+                    </div>
+                     {{ form.methods.label }}
+                    <div class='form-group'>
+                        {{ form.methods(class="form-control") }}
+                    </div>
+                    {{ form.uri.label }}
+                    <div class='form-group'>
+                        {{ form.uri(class="form-control") }}
+                    </div>
+                    {{ form.desc.label }}
+                    <div class='form-group'>
+                        {{ form.desc(class="form-control") }}
+                    </div>
+                </form>
+                <intput class="btn btn-default" type="button" onclick="add()">提交</intput>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% block js %}
+    <script src={{ url_for("static", filename="formtools.js") }}></script>
+
+    <script>
+        $(function () {
+            // jQuery selection for the 2 select boxes
+            var dropdown = {
+                project_id: $('#select_project'),
+                model_id: $('#select_model')
+            };
+
+            // call to update on load
+            updateModel();
+
+            // function to call XHR and update county dropdown
+            function updateModel() {
+                var send = {
+                    project_id: dropdown.project_id.val()
+                };
+                dropdown.model_id.attr('disabled', 'disabled');
+                dropdown.model_id.empty();
+                $.getJSON("{{ url_for('api._get_model_by_project') }}", send, function (data) {
+                    data.forEach(function (item) {
+                        dropdown.model_id.append(
+                            $('<option>', {
+                                value: item[0],
+                                text: item[1]
+                            })
+                        );
+                    });
+                    dropdown.model_id.removeAttr('disabled');
+                });
+            }
+
+            // event listener to state dropdown change
+            dropdown.project_id.on('change', function () {
+                updateModel();
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        function add() {
+            $.ajax({
+                    url: "{{ url_for( 'api.add_interface') }}",
+                    type: 'POST',
+                    data: getFormData("#interface-add"),
+                    contentType: 'application/json; charset=UTF-8',
+                    processData: false,
+                    success: function (result) {
+                        if (result['code'] == 0) {
+                            alert(result['message'])
+                            location.href = '{{ url_for('project.interface_show') }}'
+                        } else {
+                            alert(result['message'])
+                        }
+
+                    }
+                }
+            )
+
+
+        }
+    </script>
+
+{% endblock %}
+
+
+

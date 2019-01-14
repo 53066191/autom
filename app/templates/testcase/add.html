@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>新增用例</h1>
+    </div>
+    <hr>
+    <form method="POST" id="testcase-add">
+        {{ testcase_form.project_id.label }}
+        <div class='form-group'>
+            {{ testcase_form.project_id(class="form-control") }}
+        </div>
+        {{ testcase_form.name.label }}
+        <div class='form-group'>
+            {{ testcase_form.name(class="form-control") }}
+        </div>
+
+        {{ testcase_form.desc.label }}
+        <div class='form-group'>
+            {{ testcase_form.desc(class="form-control") }}
+        </div>
+
+    </form>
+    <intput class="btn btn-default" type="button" onclick="add_testcase()">提交</intput>
+
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+    <script src={{ url_for("static", filename="formtools.js") }}></script>
+    <script type="text/javascript">
+        function add_testcase() {
+            $.ajax({
+                    url: "{{ url_for( 'api.add_testcase') }}",
+                    type: 'POST',
+                    data: getFormData("#testcase-add"),
+                    contentType: 'application/json; charset=UTF-8',
+                    processData: false,
+                    success: function (result) {
+                        if (result['code'] == 0) {
+                            alert(result['message'])
+                            location.href = '{{ url_for('project.testcase_show') }}'
+                        } else {
+                            alert(result['message'])
+                        }
+
+                    }
+                }
+            )
+        }
+    </script>
+    <script>
+        $(function () {
+            // jQuery selection for the 2 select boxes
+            var dropdown = {
+                project_id: $('#select_project'),
+                interface_id: $('#select_interface')
+            };
+
+            // call to update on load
+            updateModel();
+
+            // function to call XHR and update county dropdown
+            function updateModel() {
+                var send = {
+                    project_id: dropdown.project_id.val()
+                };
+                dropdown.interface_id.attr('disabled', 'disabled');
+                dropdown.interface_id.empty();
+                $.getJSON("{{ url_for('api._get_interface_by_project') }}", send, function (data) {
+                    data.forEach(function (item) {
+                        dropdown.interface_id.append(
+                            $('<option>', {
+                                value: item[0],
+                                text: item[1]
+                            })
+                        );
+                    });
+                    dropdown.interface_id.removeAttr('disabled');
+                });
+            }
+
+            // event listener to state dropdown change
+            dropdown.project_id.on('change', function () {
+                updateModel();
+            });
+
+        });
+    </script>
+{% endblock %}

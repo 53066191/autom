@@ -1,0 +1,95 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+    {{ super() }}
+    {{ moment.include_jquery() }}
+    {{moment.include_moment()}}
+    {{ moment.lang("zh-CN") }}
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico')}}",type="image/x-ico">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico')}}",type="image/x-ico">
+{% endblock %}
+
+{% block title %} 自动化测试管理平台 {% endblock %}
+{% block navbar %}
+    <div class="wrapper">
+        <div class="navbar navbar-inverse " role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+
+                </button>
+                <a class="navbar-brand" href="/">自动化测试管理平台</a>
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                {% if current_user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img class="img-rounded profile-thumbnail" src="{{ current_user.gravatar(size=20) }}"> <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Sign In as {{current_user.username }}</a></li>
+    {#                        <li class="divider"></li>#}
+    {#                        <li><a href="{{ url_for('main.user' , username=current_user.username )}}">Yor Profile</a></li>#}
+    {##}
+    {#                        <li><a href="{{ url_for('auth.change_password') }}">Change Password</a></li>#}
+    {#                        <li><a href="{{ url_for('auth.change_email_request') }}">Change Email</a></li>#}
+                            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+                        </ul>
+                    </li>
+
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Sing Up</a></li>
+                {% endif %}
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">HOME</a> </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% block menu %}
+        {% if current_user.is_authenticated %}
+            {% include 'menu.html' %}
+        {% endif %}
+    {% endblock %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+    {% for msg in get_flashed_messages() %}
+        {% if (msg.find("错误") != -1) %}
+            <div class="alert alert-danger" style="text-align: center">
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            {{ msg }}
+            </div>
+        {% else %}
+            <div class="alert alert-success" style="text-align: center">
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            {{ msg }}
+            </div>
+        {% endif %}
+
+    {% endfor %}
+    {% block page_content %} {% endblock %}
+    <div class="align-bottom">
+    {% block page_bottom %} {% endblock %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{%endblock%}
+
+

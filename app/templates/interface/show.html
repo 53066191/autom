@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import "_page.html" as macros %}
+
+
+{% block page_content %}
+    <button class="btn btn-default" data-toggle="modal" data-target="#addInterface">
+	新增接口
+    </button>
+    <hr>
+        {% include 'interface/_add_interface.html' %}
+
+    <ul class="projects">
+            <table  width="100%">
+                {% for  interface in interfaces %}
+                    <div class="profile-thumbnail">
+                        <tr >
+                                <td>{{ loop.index0 + 1}} </td>
+                                <td>{{ interface.name}} </td>
+                                <td>{{ interface.uri}} </td>
+                                <td>{{ interface.methods}} </td>
+                                <td style="text-align:left;">{{ moment(interface.timestamp).fromNow() }}</td>
+                                <td height="40px">
+                                    <button type="button" class="btn btn-default"
+                                              onclick="location.href='#'">编辑
+                                    </button>
+                                </td>
+
+                        </tr>
+                    </div>
+                {% endfor %}
+            </table>
+        </ul>
+    {#分页    #}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, 'project.interface_show') }}
+    </div>
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+
+

@@ -1,0 +1,114 @@
+<div class="modal fade" id="addStep" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            {#            <button type="button" class="close" data-dismiss="modal">&times;</button>#}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="teststep-add">
+
+                    {{ teststep_form.index.label }}
+                    <div class='form-group'>
+                        {{ teststep_form.index(class="form-control") }}
+                    </div>
+                    {{ teststep_form.interface_id.label }}
+                    <div class='form-group'>
+                        {{ teststep_form.interface_id(class="form-control") }}
+                    </div>
+
+                    {{ teststep_form.desc.label }}
+                    <div class='form-group'>
+                        {{ teststep_form.desc(class="form-control") }}
+                    </div>
+                    {{ teststep_form.datas.label }}
+                    <div class='form-group'>
+                        {{ teststep_form.datas(class="form-control") }}
+                    </div>
+                    {{ teststep_form.code.label }}
+                    <div class='form-group'>
+                        {{ teststep_form.code}}
+                    </div>
+
+                </form>
+                <intput class="btn btn-default" type="button" onclick="add_step({{ teststep_form.testcase_id.data }})">
+                    提交
+                </intput>
+            </div>
+            {{ ckeditor.load() }}
+            {{ ckeditor.config(name='code') }}
+        </div>
+    </div>
+</div>
+
+
+
+{% block js %}
+    <script src={{ url_for("static", filename="formtools.js") }}></script>
+    <script type="text/javascript">
+        function add_step(case_id) {
+            var baseUrl = "{{ url_for( 'api.add_testcase_step', case_id='DUMMY_VALUE') }}"
+            var url = baseUrl.replace(/DUMMY_VALUE/, case_id)
+            $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: getFormData("#teststep-add"),
+                    contentType: 'application/json; charset=UTF-8',
+                    processData: false,
+                    success: function (result) {
+                        if (result['code'] == 0) {
+                            alert(result['message'])
+                            location.href = '{{ url_for('project.testcase_edit', id="") }}' + case_id
+                        } else {
+                            alert(result['message'])
+                        }
+
+                    }
+                }
+            )
+        }
+    </script>
+    {#  如果需要可以选择所有项目的接口，则去除下面的js  #}
+    <script>
+        $(function () {
+            // jQuery selection for the 2 select boxes
+            var dropdown = {
+                project_id: $('#select_project'),
+                interface_id: $('#select_interface')
+            };
+
+            // call to update on load
+            updateModel();
+
+            // function to call XHR and update county dropdown
+            function updateModel() {
+                var send = {
+                    project_id: dropdown.project_id.val()
+                };
+                dropdown.interface_id.attr('disabled', 'disabled');
+                dropdown.interface_id.empty();
+                $.getJSON("{{ url_for('api._get_interface_by_project') }}", send, function (data) {
+                    data.forEach(function (item) {
+                        dropdown.interface_id.append(
+                            $('<option>', {
+                                value: item[0],
+                                text: item[1]
+                            })
+                        );
+                    });
+                    dropdown.interface_id.removeAttr('disabled');
+                });
+            }
+
+            // event listener to state dropdown change
+            dropdown.project_id.on('change', function () {
+                updateModel();
+            });
+
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import "_page.html" as macros %}
+
+
+{% block page_content %}
+    <input  type="button" class="btn btn-default"
+            onclick="location.href='{{url_for('project.testcase_add') }}'"， value="新增用例">
+    <hr>
+
+    <ul class="projects">
+            <table  width="100%">
+                <tr >
+                    <td>序号</td>
+                    <td>用例名</td>
+                    <td>用例描述</td>
+                    <td>创建时间</td>
+                    <td>操作</td>
+
+                </tr>
+                {% for  case in testcases %}
+                    <div class="profile-thumbnail">
+                        <tr >
+                                <td>{{ loop.index0 + 1}} </td>
+                                <td>{{ case.name}} </td>
+                                <td>{{ case.desc}} </td>
+                                <td style="text-align:left;">{{ moment(case.timestamp).fromNow() }}</td>
+                                <td height="40px">
+                                    <button type="button" class="btn btn-default"
+                                              onclick="location.href='{{ url_for('project.testcase_edit',id=case.id) }}'">编辑
+                                    </button>
+                                </td>
+                        </tr>
+                    </div>
+                {% endfor %}
+            </table>
+        </ul>
+    {#分页    #}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, 'project.interface_show') }}
+    </div>
+
+</div>
+
+{% endblock %}
+
